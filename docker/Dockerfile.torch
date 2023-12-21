@@ -1,0 +1,45 @@
+# 该镜像用于配置编译pytorch的环境
+FROM nvidia/cuda:10.2-cudnn8-devel-ubuntu18.04
+
+RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/3bf863cc.pub
+RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/7fa2af80.pub
+RUN apt-get update && apt-get install -y --no-install-recommends \
+	apt-utils \
+	build-essential \
+	ca-certificates \
+	ccache \
+	sudo \
+	wget \
+	git \
+	libjpeg-dev \
+	libpng-dev \
+	libnuma-dev && \
+	rm -rf /var/lib/apt/lists/*
+
+# 安装cmake
+COPY install/ubuntu_install_build.sh /install/ubuntu_install_build.sh
+RUN bash /install/ubuntu_install_build.sh
+
+# 安装conda
+COPY install/ubuntu_install_conda.sh /install/ubuntu_install_conda.sh
+RUN bash /install/ubuntu_install_conda.sh
+
+ENV CONDA_ALWAYS_YES="true"
+
+# 配置pytorch编译环境
+RUN /opt/conda/bin/conda install -y python=3.7.5 astunparse numpy ninja pyyaml mkl \
+	mkl-include setuptools cffi \
+	typing_extensions future six \
+	requests dataclasses && \
+	/opt/conda/bin/conda install -y -c pytorch magma-cuda102
+ENV CONDA_ALWAYS_YES=
+
+# Environment variables
+ENV PATH=/usr/local/nvidia/bin:${PATH}
+ENV PATH=/usr/local/cuda/bin:${PATH}
+ENV CPLUS_INCLUDE_PATH=/usr/local/cuda/include:${CPLUS_INCLUDE_PATH}
+ENV C_INCLUDE_PATH=/usr/local/cuda/include:${C_INCLUDE_PATH}
+ENV LIBRARY_PATH=/usr/local/cuda/lib64:/usr/local/nvidia/lib64:${LIBRARY_PATH}
+ENV LD_LIBRARY_PATH=/usr/local/cuda/lib64:/usr/local/nvidia/lib64:${LD_LIBRARY_PATH}
+# ENV CUDA_VISIBLE_DEVICES=0
+ENV TF_FORCE_GPU_ALLOW_GROWTH=true
