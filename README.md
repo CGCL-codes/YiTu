@@ -1,12 +1,12 @@
 # YiTu_GNN & YiTu_GP
 
-# 安装
+## 安装
 
 提供两种安装方式：
 1. 利用Docker构建镜像
 2. 利用conda安装环境
 
-## 构建Docker镜像
+### 构建Docker镜像
 
 1. 首先利用Docker构建YiTu_GNN运行的虚拟环境，Docker的安装请[参考](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#install-guide)。如下我们构建了一个叫做`YiTu_GNN`的镜像，之后的所有实验都是在该镜像上完成的。
 ```shell
@@ -33,7 +33,7 @@ cd /home/YiTu_GNN
 python setup.py install
 ```
 
-## 基于conda安装
+### 基于conda安装
 
 1. 安装cmake:
 ```shell
@@ -119,7 +119,7 @@ conda install -y -c dglteam dgl-cuda10.2=0.7.1
 python setup.py install
 ```
 
-# 编译（需要Python 3.7）
+## 编译（需要Python 3.7）
 
 进入根目录下的 examples/YiTu_GNN/NDP 目录
 
@@ -137,20 +137,20 @@ make
 cd ..
 ```
 
-# 数据预处理
+## 数据预处理
 
-## 1. YiTu_GNN
+### 1. YiTu_GNN
 
-### 不使用NDP
+#### 不使用NDP
 
-#### 下载数据集：
+##### 下载数据集：
 
 ```shell
 cd /home/data
 git clone https://github.com/kimiyoung/planetoid.git
 ```
 
-#### 数据预处理
+##### 数据预处理
 
 ```shell
 python example/YiTu_GNN/single/data_process.py --data_path /home/data/planetoid/data --dataset citeseer
@@ -158,9 +158,9 @@ python example/YiTu_GNN/single/data_process.py --data_path /home/data/planetoid/
 python example/YiTu_GNN/single/data_process.py --data_path /home/data/planetoid/data --dataset pubmed
 ```
 
-### 使用NDP
+#### 使用NDP
 
-#### 数据集准备
+##### 数据集准备
 * 数据集格式 (`vnum`表示顶点个数)
   
   * `adj.npz`: 图邻接矩阵，大小为`(vnum, vnum)`，保存为`scipy.sparse`coo matrix 格式。
@@ -190,9 +190,9 @@ python example/YiTu_GNN/single/data_process.py --data_path /home/data/planetoid/
     python YiTu_GNN/NDP/partition/dg.py --num-hops 2 --partition 1 --dataset /home/reddit
     ```
 
-## 2. YiTu_GP
+### 2. YiTu_GP
 
-### 数据格式说明
+#### 数据格式说明
 
 .el 格式：每行两个整数，代表一条边的源节点和目的节点
 ```
@@ -210,7 +210,7 @@ python example/YiTu_GNN/single/data_process.py --data_path /home/data/planetoid/
 1 2 10
 ```
 
-### 数据格式转换
+#### 数据格式转换
 
 YiTu_GP 读取二进制的 CSR 图格式，这样的格式读取速度更快，且节省空间。转换方法如下：
 
@@ -223,13 +223,13 @@ tools/converter path_to_Graph.el
 tools/converter path_to_Graph.wel
 ```
 
-# 运行
+## 运行
 
-## 不使用NDP
+### 不使用NDP
 
-### 1. YiTu_GNN
+#### 1. YiTu_GNN
 
-#### 运行示例程序：
+##### 运行示例程序：
 
 ```shell
 python example/YiTu_GNN/single/gcn/main.py --data_path /home/data/planetoid/data --dataset citeseer --dim 3703 --classes 6
@@ -237,7 +237,7 @@ python example/YiTu_GNN/single/gcn/main.py --data_path /home/data/planetoid/data
 python example/YiTu_GNN/single/gcn/main.py --data_path /home/data/planetoid/data --dataset pubmed --dim 500 --classes 3
 ```
 
-### 2. YiTu_GP
+#### 2. YiTu_GP
 
 进入根目录下的 examples/YiTu_GNN/NDP 目录
 ```shell
@@ -248,9 +248,9 @@ nondp/sssp-w --input bcsrgraph_path --source 1
 nondp/bc-w --input bcsrgraph_path --source 1
 ```
 
-## 使用NDP(倾向大图使用)
+### 使用NDP(倾向大图使用)
 
-### 1. YiTu_GNN
+#### 1. YiTu_GNN
 
 1. Graph Server运行
 
@@ -274,7 +274,7 @@ python demo.py --YiTu_GNN 1 --method gcn --dataset /home/reddit --gpu [0] --feat
 python demo.py --YiTu_GNN 1 --method gin --dataset /home/reddit --gpu [0] --feat-size 602
 ```
 
-### 2. YiTu_GP
+#### 2. YiTu_GP
 
 ```shell
 python demo.py --YiTu_GNN 0 --method bfs --input bcsrgraph_path --source 1
@@ -284,3 +284,5 @@ python demo.py --YiTu_GNN 0 --method sssp --input bcsrgraph_path --source 1
 python demo.py --YiTu_GNN 0 --method sswp --input bcsrgraph_path --source 1
 python demo.py --YiTu_GNN 0 --method bc --input bcsrgraph_path --source 1
 ```
+## Contact
+YiTu is developed by the HUST SCTS&CGCL Lab. If you have any questions, please contact Yu Zhang (zhyu@hust.edu.cn), Chuyue Ye (yechuyue@hust.edu.cn), Xin Ning (xinning@hust.edu.cn), Jian Cheng (jaycheng@hust.edu.cn), Chenze Lu (czlu@hust.edu.cn), Zhiying Huang (hzying@hust.edu.cn). We welcome you to commit your modification to support our project.
