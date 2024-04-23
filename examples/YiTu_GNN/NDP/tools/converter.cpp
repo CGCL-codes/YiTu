@@ -1,7 +1,7 @@
 #include<pybind11/pybind11.h>
 #include "../shared/globals.hpp"
 
-
+namespace py = pybind11;
 bool IsWeightedFormat(string format)
 {
 	if((format == "bwcsr")	||
