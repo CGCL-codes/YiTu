@@ -344,3 +344,53 @@ python demo.py --YiTu_GNN 0 --method bc --input bcsrgraph_path --source 1
 For applications that run on unweighted graphs and weighted graphs, the input argument are both the graph file (.bcsr). For weighted graphs, the edgeWeight file (.bcsrw) should be in the same directory as the graph file (.bcsr).
 
 The source argument is an integer to indicate the source vertex, and the source vertex id is 0 By default.
+### YiTu_H
+performance comparison with baseline in terms of throughput and memory consumption.
+```bash
+# R-GCN on AIFB
+PYTHONPATH=. python3 test/bench_macro.py --lib=dgl --model=rgcn --dataset=aifb_hetero --d_hidden=32
+PYTHONPATH=. python3 test/bench_macro.py --lib=XGNN_H --model=rgcn --dataset=aifb_hetero --d_hidden=32
+
+# R-GAT on AIFB (slower)
+PYTHONPATH=. python3 test/bench_macro.py --lib=dgl --model=rgat --dataset=aifb_hetero --d_hidden=32
+PYTHONPATH=. python3 test/bench_macro.py --lib=XGNN_H --model=rgat --dataset=aifb_hetero --d_hidden=32
+```
++ Expected output:
+```bash
+[DGL] aifb-hetero, DGLRGCNModel, d_hidden=32
+allocated_bytes.all.allocated: 384.49 MB
+allocated_bytes.small_pool.allocated: 330.37 MB
+allocated_bytes.large_pool.allocated: 54.12 MB
+throughput: 1.0x
+...
+[HGL] AIFBDataset, RGCNModel, d_hidden=32
+allocated_bytes.all.allocated: 58.97 MB
+allocated_bytes.small_pool.allocated: 45.17 MB
+allocated_bytes.large_pool.allocated: 13.80 MB
+throughput: 15.0x~20.0x
+...
+```
++ Benchmark Parameters:
+  + --lib: `'dgl', 'XGNN_H', 'pyg'`
+  + --model: `'gcn', 'gat', 'rgcn', 'rgat'`
+  + --dataset: `'cora_tiny', 'amazon', 'cora_full', 'reddit'` (for `'gcn', 'gat'`), `'aifb_hetero', 'mutag_hetero', 'bgs_hetero', 'am_hetero'` (for `'rgcn', 'rgat'`)
+  + --d_hidden: `32` is the recommanded hidden size
+### YiTu_T
+#### Single GPU Link Prediction
+>python train.py --data \<NameOfYourDataset> --config \<PathToConfigFile>
+
+#### MultiGPU Link Prediction
+>python -m torch.distributed.launch --nproc_per_node=\<NumberOfGPUs+1> train_dist.py --data \<NameOfYourDataset> --config \<PathToConfigFile> --num_gpus \<NumberOfGPUs>
+
+#### Dynamic Node Classification
+
+Currenlty, TGL only supports performing dynamic node classification using the dynamic node embedding generated in link prediction. 
+
+For Single GPU models, directly run
+>python train_node.py --data \<NameOfYourDATA> --config \<PathToConfigFile> --model \<PathToSavedModel>
+
+For multi-GPU models, you need to first generate the dynamic node embedding
+>python -m torch.distributed.launch --nproc_per_node=\<NumberOfGPUs+1> extract_node_dist.py --data \<NameOfYourDataset> --config \<PathToConfigFile> --num_gpus \<NumberOfGPUs> --model \<PathToSavedModel>
+
+After generating the node embeding for multi-GPU models, run
+>python train_node.py --data \<NameOfYourDATA> --model \<PathToSavedModel>
