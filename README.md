@@ -242,6 +242,29 @@ tools/converter path_to_Graph.el
 tools/converter path_to_Graph.wel
 ```
 The first command converts Graph.el to the binary CSR format and generates a binary graph file with .bcsr extension under the same directory as the original file. The second command converts Graph.wel to a binary graph file with .bcsr extension and a binary edgeWeight file with .bcsrw extension.
+### 3. YiTu_H
++ First, download and list all the datasets
+```bash
+PYTHONPATH=. python3 test/bench_macro.py --info
+```
++ Expected output:
+```bash
+----------[aifb-hetero]----------
+n_nodes: 7262
+node-types: 7
+meta-paths: 104
+n_rows: 216138
+n_edges: 48810
+avg_degrees: 4.030543059612123
+----------[mutag-hetero]----------
+n_nodes: 27163
+node-types: 5
+meta-paths: 50
+n_rows: 281757
+n_edges: 148100
+avg_degrees: 0.5861625145724975
+...
+```
 
 ## Running
 
