@@ -243,7 +243,7 @@ tools/converter path_to_Graph.wel
 ```
 The first command converts Graph.el to the binary CSR format and generates a binary graph file with .bcsr extension under the same directory as the original file. The second command converts Graph.wel to a binary graph file with .bcsr extension and a binary edgeWeight file with .bcsrw extension.
 ### 3. YiTu_H
-+ First, download and list all the datasets
++ download and list all the datasets
 ```bash
 PYTHONPATH=. python3 test/bench_macro.py --info
 ```
@@ -265,6 +265,17 @@ n_edges: 148100
 avg_degrees: 0.5861625145724975
 ...
 ```
+### 4. YiTu_T
+The four datasets are available to download from AWS S3 bucket using the `down.sh` script. The total download size is around 350GB.
+
+To use your own dataset, you need to put the following files in the folder `\DATA\\<NameOfYourDataset>\`
+
+1. `edges.csv`: The file that stores temporal edge informations. The csv should have the following columns with the header as `,src,dst,time,ext_roll` where each of the column refers to edge index (start with zero), source node index (start with zero), destination node index, time stamp, extrapolation roll (0 for training edges, 1 for validation edges, 2 for test edges). The CSV should be sorted by time ascendingly.
+2. `ext_full.npz`: The T-CSR representation of the temporal graph. We provide a script to generate this file from `edges.csv`. You can use the following command to use the script 
+    >python gen_graph.py --data \<NameOfYourDataset>
+3. `edge_features.pt` (optional): The torch tensor that stores the edge featrues row-wise with shape (num edges, dim edge features). *Note: at least one of `edge_features.pt` or `node_features.pt` should present.*
+4. `node_features.pt` (optional): The torch tensor that stores the node featrues row-wise with shape (num nodes, dim node features). *Note: at least one of `edge_features.pt` or `node_features.pt` should present.*
+5. `labels.csv` (optional): The file contains node labels for dynamic node classification task. The csv should have the following columns with the header as `,node,time,label,ext_roll` where each of the column refers to node label index (start with zero), node index (start with zero), time stamp, node label, extrapolation roll (0 for training node labels, 1 for validation node labels, 2 for test node labels). The CSV should be sorted by time ascendingly.
 
 ## Running
 
