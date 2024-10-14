@@ -83,6 +83,8 @@ conda install -y astunparse numpy ninja pyyaml mkl \
 	networkx matplotlib nltk \
 	tqdm pandas scikit-learn && \
 	conda install -y -c pytorch magma-cuda102
+conda install pytest -c conda-forge
+pip3 install rdflib
 # stand-alone dependency packages
 apt-get update && apt-get install -y --no-install-recommends \
     libboost-all-dev \
@@ -120,6 +122,14 @@ conda install -y -c dglteam dgl-cuda10.2=0.7.1
 6. installing YiTu_GNN
 ```shell
 python setup.py install
+```
+7. To use the heterogeneous graph training module, run the following commands on ./YiTu_GNN/YiTu_H directory:
+```shell
+python setup.py install
+```
+8. To use the Temporal GNN training module, run the following commands on ./YiTu_GNN/YiTu_T directory:
+```shell
+python setup.py build_ext --inplace
 ```
 
 ## Compilation
