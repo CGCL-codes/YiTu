@@ -83,6 +83,8 @@ conda install -y astunparse numpy ninja pyyaml mkl \
 	networkx matplotlib nltk \
 	tqdm pandas scikit-learn && \
 	conda install -y -c pytorch magma-cuda102
+conda install pytest -c conda-forge
+pip3 install rdflib
 # stand-alone dependency packages
 apt-get update && apt-get install -y --no-install-recommends \
     libboost-all-dev \
@@ -120,6 +122,14 @@ conda install -y -c dglteam dgl-cuda10.2=0.7.1
 6. installing YiTu_GNN
 ```shell
 python setup.py install
+```
+7. To use the heterogeneous graph training module, run the following commands on ./YiTu_GNN/YiTu_H directory:
+```shell
+python setup.py install
+```
+8. To use the Temporal GNN training module, run the following commands on ./YiTu_GNN/YiTu_T directory:
+```shell
+python setup.py build_ext --inplace
 ```
 
 ## Compilation
@@ -232,6 +242,40 @@ tools/converter path_to_Graph.el
 tools/converter path_to_Graph.wel
 ```
 The first command converts Graph.el to the binary CSR format and generates a binary graph file with .bcsr extension under the same directory as the original file. The second command converts Graph.wel to a binary graph file with .bcsr extension and a binary edgeWeight file with .bcsrw extension.
+### 3. YiTu_H
++ download and list all the datasets
+```bash
+PYTHONPATH=. python3 test/bench_macro.py --info
+```
++ Expected output:
+```bash
+----------[aifb-hetero]----------
+n_nodes: 7262
+node-types: 7
+meta-paths: 104
+n_rows: 216138
+n_edges: 48810
+avg_degrees: 4.030543059612123
+----------[mutag-hetero]----------
+n_nodes: 27163
+node-types: 5
+meta-paths: 50
+n_rows: 281757
+n_edges: 148100
+avg_degrees: 0.5861625145724975
+...
+```
+### 4. YiTu_T
+The four datasets are available to download from AWS S3 bucket using the `down.sh` script. The total download size is around 350GB.
+
+To use your own dataset, you need to put the following files in the folder `\DATA\\<NameOfYourDataset>\`
+
+1. `edges.csv`: The file that stores temporal edge informations. The csv should have the following columns with the header as `,src,dst,time,ext_roll` where each of the column refers to edge index (start with zero), source node index (start with zero), destination node index, time stamp, extrapolation roll (0 for training edges, 1 for validation edges, 2 for test edges). The CSV should be sorted by time ascendingly.
+2. `ext_full.npz`: The T-CSR representation of the temporal graph. We provide a script to generate this file from `edges.csv`. You can use the following command to use the script 
+    >python gen_graph.py --data \<NameOfYourDataset>
+3. `edge_features.pt` (optional): The torch tensor that stores the edge featrues row-wise with shape (num edges, dim edge features). *Note: at least one of `edge_features.pt` or `node_features.pt` should present.*
+4. `node_features.pt` (optional): The torch tensor that stores the node featrues row-wise with shape (num nodes, dim node features). *Note: at least one of `edge_features.pt` or `node_features.pt` should present.*
+5. `labels.csv` (optional): The file contains node labels for dynamic node classification task. The csv should have the following columns with the header as `,node,time,label,ext_roll` where each of the column refers to node label index (start with zero), node index (start with zero), time stamp, node label, extrapolation roll (0 for training node labels, 1 for validation node labels, 2 for test node labels). The CSV should be sorted by time ascendingly.
 
 ## Running
 
@@ -300,3 +344,53 @@ python demo.py --YiTu_GNN 0 --method bc --input bcsrgraph_path --source 1
 For applications that run on unweighted graphs and weighted graphs, the input argument are both the graph file (.bcsr). For weighted graphs, the edgeWeight file (.bcsrw) should be in the same directory as the graph file (.bcsr).
 
 The source argument is an integer to indicate the source vertex, and the source vertex id is 0 By default.
+### YiTu_H
+performance comparison with baseline in terms of throughput and memory consumption.
+```bash
+# R-GCN on AIFB
+PYTHONPATH=. python3 test/bench_macro.py --lib=dgl --model=rgcn --dataset=aifb_hetero --d_hidden=32
+PYTHONPATH=. python3 test/bench_macro.py --lib=XGNN_H --model=rgcn --dataset=aifb_hetero --d_hidden=32
+
+# R-GAT on AIFB (slower)
+PYTHONPATH=. python3 test/bench_macro.py --lib=dgl --model=rgat --dataset=aifb_hetero --d_hidden=32
+PYTHONPATH=. python3 test/bench_macro.py --lib=XGNN_H --model=rgat --dataset=aifb_hetero --d_hidden=32
+```
++ Expected output:
+```bash
+[DGL] aifb-hetero, DGLRGCNModel, d_hidden=32
+allocated_bytes.all.allocated: 384.49 MB
+allocated_bytes.small_pool.allocated: 330.37 MB
+allocated_bytes.large_pool.allocated: 54.12 MB
+throughput: 1.0x
+...
+[HGL] AIFBDataset, RGCNModel, d_hidden=32
+allocated_bytes.all.allocated: 58.97 MB
+allocated_bytes.small_pool.allocated: 45.17 MB
+allocated_bytes.large_pool.allocated: 13.80 MB
+throughput: 15.0x~20.0x
+...
+```
++ Benchmark Parameters:
+  + --lib: `'dgl', 'XGNN_H', 'pyg'`
+  + --model: `'gcn', 'gat', 'rgcn', 'rgat'`
+  + --dataset: `'cora_tiny', 'amazon', 'cora_full', 'reddit'` (for `'gcn', 'gat'`), `'aifb_hetero', 'mutag_hetero', 'bgs_hetero', 'am_hetero'` (for `'rgcn', 'rgat'`)
+  + --d_hidden: `32` is the recommanded hidden size
+### YiTu_T
+#### Single GPU Link Prediction
+>python train.py --data \<NameOfYourDataset> --config \<PathToConfigFile>
+
+#### MultiGPU Link Prediction
+>python -m torch.distributed.launch --nproc_per_node=\<NumberOfGPUs+1> train_dist.py --data \<NameOfYourDataset> --config \<PathToConfigFile> --num_gpus \<NumberOfGPUs>
+
+#### Dynamic Node Classification
+
+Currenlty, TGL only supports performing dynamic node classification using the dynamic node embedding generated in link prediction. 
+
+For Single GPU models, directly run
+>python train_node.py --data \<NameOfYourDATA> --config \<PathToConfigFile> --model \<PathToSavedModel>
+
+For multi-GPU models, you need to first generate the dynamic node embedding
+>python -m torch.distributed.launch --nproc_per_node=\<NumberOfGPUs+1> extract_node_dist.py --data \<NameOfYourDataset> --config \<PathToConfigFile> --num_gpus \<NumberOfGPUs> --model \<PathToSavedModel>
+
+After generating the node embeding for multi-GPU models, run
+>python train_node.py --data \<NameOfYourDATA> --model \<PathToSavedModel>
