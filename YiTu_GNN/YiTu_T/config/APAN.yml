@@ -1,0 +1,29 @@
+sampling:
+  - layer: 1
+    neighbor: 
+      - 10
+    strategy: 'recent'
+    prop_time: False
+    history: 1
+    duration: 0
+    num_thread: 32
+    no_neg: True
+memory: 
+  - type: 'node'
+    dim_time: 100
+    deliver_to: 'neighbors'
+    mail_combine: 'last'
+    memory_update: 'transformer'
+    attention_head: 2
+    mailbox_size: 10
+    combine_node_feature: False
+    dim_out: 100
+gnn:
+  - arch: 'identity'
+train:
+  - epoch: 100
+    batch_size: 600
+    lr: 0.0001
+    dropout: 0.1
+    att_dropout: 0.1
+    # all_on_gpu: True

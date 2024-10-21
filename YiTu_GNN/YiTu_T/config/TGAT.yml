@@ -1,0 +1,26 @@
+sampling:
+  - layer: 2
+    neighbor: 
+      - 10
+      - 10
+    strategy: 'uniform'
+    prop_time: False
+    history: 1
+    duration: 0
+    num_thread: 32
+memory: 
+  - type: 'none'
+    dim_out: 0
+gnn:
+  - arch: 'transformer_attention'
+    layer: 2
+    att_head: 2
+    dim_time: 100
+    dim_out: 100
+train:
+  - epoch: 100
+    batch_size: 600
+    lr: 0.0001
+    dropout: 0.1
+    att_dropout: 0.1
+    all_on_gpu: True
