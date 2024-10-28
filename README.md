@@ -309,7 +309,7 @@ nondp/sssp-w --input bcsrgraph_path --source 1
 nondp/bc-w --input bcsrgraph_path --source 1
 ```
 
-### 3. YiTu_H
+#### 3. YiTu_H
 
 To run the sample programs, run the following on root/YiTu_GNN/YiTu_H directory:
 performance comparison with baseline in terms of throughput and memory consumption.
@@ -343,16 +343,16 @@ throughput: 15.0x~20.0x
   + --dataset: `'cora_tiny', 'amazon', 'cora_full', 'reddit'` (for `'gcn', 'gat'`), `'aifb_hetero', 'mutag_hetero', 'bgs_hetero', 'am_hetero'` (for `'rgcn', 'rgat'`)
   + --d_hidden: `32` is the recommanded hidden size
 
-### 4. YiTu_T
+#### 4. YiTu_T
 
 To run the sample programs, run the following on root/YiTu_GNN/YiTu_T directory:
-#### Single GPU Link Prediction
+##### Single GPU Link Prediction
 >python train.py --data \<NameOfYourDataset> --config \<PathToConfigFile>
 
-#### MultiGPU Link Prediction
+##### MultiGPU Link Prediction
 >python -m torch.distributed.launch --nproc_per_node=\<NumberOfGPUs+1> train_dist.py --data \<NameOfYourDataset> --config \<PathToConfigFile> --num_gpus \<NumberOfGPUs>
 
-#### Dynamic Node Classification
+##### Dynamic Node Classification
 
 Currenlty, TGL only supports performing dynamic node classification using the dynamic node embedding generated in link prediction. 
 
