@@ -309,49 +309,6 @@ nondp/sssp-w --input bcsrgraph_path --source 1
 nondp/bc-w --input bcsrgraph_path --source 1
 ```
 
-### With NDP(better to use NDP on large graph)
-
-#### 1. YiTu_GNN
-
-1. Running Graph Server
-To run the graph server, run the following on root directory:
-
-* NDP Store Server
-```shell
-python examples/YiTu_GNN/NDP/server/NDP_server.py --dataset /home/reddit --num-workers [1]
-```
-
-2. Running Trainer
-To run the trainer, run the following on root/examples/YiTu_GNN/NDP directory:
-
-* Graph Convolutional Network (GCN)
-
-```shell
-python demo.py --YiTu_GNN 1 --method gcn --dataset /home/reddit --gpu [0] --feat-size 602
-```
-
-* Graph Isomorphism Network (GIN)
-
-```shell
-python demo.py --YiTu_GNN 1 --method gin --dataset /home/reddit --gpu [0] --feat-size 602
-```
-
-#### 2. YiTu_GP
-The application takes a graph as input as well as some optional arguments. For example:
-
-```shell
-python demo.py --YiTu_GNN 0 --method bfs --input bcsrgraph_path --source 1
-python demo.py --YiTu_GNN 0 --method cc --input bcsrgraph_path --source 1
-python demo.py --YiTu_GNN 0 --method pr --input bcsrgraph_path
-python demo.py --YiTu_GNN 0 --method sssp --input bcsrgraph_path --source 1
-python demo.py --YiTu_GNN 0 --method sswp --input bcsrgraph_path --source 1
-python demo.py --YiTu_GNN 0 --method bc --input bcsrgraph_path --source 1
-```
-
-For applications that run on unweighted graphs and weighted graphs, the input argument are both the graph file (.bcsr). For weighted graphs, the edgeWeight file (.bcsrw) should be in the same directory as the graph file (.bcsr).
-
-The source argument is an integer to indicate the source vertex, and the source vertex id is 0 By default.
-
 ### 3. YiTu_H
 
 performance comparison with baseline in terms of throughput and memory consumption.
@@ -405,3 +362,46 @@ For multi-GPU models, you need to first generate the dynamic node embedding
 
 After generating the node embeding for multi-GPU models, run
 >python train_node.py --data \<NameOfYourDATA> --model \<PathToSavedModel>
+
+### With NDP(better to use NDP on large graph)
+
+#### 1. YiTu_GNN
+
+1. Running Graph Server
+To run the graph server, run the following on root directory:
+
+* NDP Store Server
+```shell
+python examples/YiTu_GNN/NDP/server/NDP_server.py --dataset /home/reddit --num-workers [1]
+```
+
+2. Running Trainer
+To run the trainer, run the following on root/examples/YiTu_GNN/NDP directory:
+
+* Graph Convolutional Network (GCN)
+
+```shell
+python demo.py --YiTu_GNN 1 --method gcn --dataset /home/reddit --gpu [0] --feat-size 602
+```
+
+* Graph Isomorphism Network (GIN)
+
+```shell
+python demo.py --YiTu_GNN 1 --method gin --dataset /home/reddit --gpu [0] --feat-size 602
+```
+
+#### 2. YiTu_GP
+The application takes a graph as input as well as some optional arguments. For example:
+
+```shell
+python demo.py --YiTu_GNN 0 --method bfs --input bcsrgraph_path --source 1
+python demo.py --YiTu_GNN 0 --method cc --input bcsrgraph_path --source 1
+python demo.py --YiTu_GNN 0 --method pr --input bcsrgraph_path
+python demo.py --YiTu_GNN 0 --method sssp --input bcsrgraph_path --source 1
+python demo.py --YiTu_GNN 0 --method sswp --input bcsrgraph_path --source 1
+python demo.py --YiTu_GNN 0 --method bc --input bcsrgraph_path --source 1
+```
+
+For applications that run on unweighted graphs and weighted graphs, the input argument are both the graph file (.bcsr). For weighted graphs, the edgeWeight file (.bcsrw) should be in the same directory as the graph file (.bcsr).
+
+The source argument is an integer to indicate the source vertex, and the source vertex id is 0 By default.
