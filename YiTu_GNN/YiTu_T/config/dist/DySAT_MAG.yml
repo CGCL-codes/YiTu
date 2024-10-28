@@ -1,0 +1,26 @@
+sampling:
+  - layer: 2
+    neighbor: 
+      - 10
+      - 10
+    strategy: 'uniform'
+    prop_time: True
+    history: 3
+    duration: 5
+    num_thread: 64
+memory: 
+  - type: 'none'
+    dim_out: 0
+gnn:
+  - arch: 'transformer_attention'
+    layer: 2
+    att_head: 2
+    dim_time: 0
+    dim_out: 100
+    combine: 'rnn'
+train:
+  - epoch: 5
+    batch_size: 4000 # local batch_size
+    lr: 0.0001
+    dropout: 0.1
+    att_dropout: 0.1

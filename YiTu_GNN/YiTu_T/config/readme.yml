@@ -1,0 +1,31 @@
+sampling:
+  - layer: <number of layers to sample>
+    neighbor: <a list of integers indicating how many neighbors are sampled in each layer>
+    strategy: <'recent' that samples most recent neighbors or 'uniform' that uniformly samples neighbors form the past>
+    prop_time: <False or True that specifies wherether to use the timestamp of the root nodes when sampling for their multi-hop neighbors>
+    history: <number of snapshots to sample on>
+    duration: <length in time of each snapshot, 0 for infinite length (used in non-snapshot-based methods)
+    num_thread: <number of threads of the sampler>
+memory: 
+  - type: <'node', we only support node memory now>
+    dim_time: <an integer, the dimension of the time embedding>
+    deliver_to: <'self' that delivers the mails only to involved nodes or 'neighbors' that deliver the mails to neighbors>
+    mail_combine: <'last' that use the latest latest mail as the input to the memory updater>
+    memory_update: <'gru' or 'rnn'>
+    mailbox_size: <an integer, the size of the mailbox for each node>
+    combine_node_feature: <False or True that specifies whether to combine node features (with the updated memory) as the input to the GNN.
+    dim_out: <an integer, the dimension of the output node memory>
+gnn:
+  - arch: <'transformer_attention' or 'identity' (no GNN)>
+    layer: <an integer, number of layers>
+    att_head: <an integer, number of attention heads>
+    dim_time: <an integer, the dimension of the time embedding>
+    dim_out: <an integer, the dimension of the output dynamic node embedding>
+train:
+  - epoch: <an integer, number of epochs to train>
+    batch_size: <an integer, the batch size (of edges); for multi-gpu training, this is the local batchsize>
+    reorder: <(optional) an integer that is divisible by batch size the specifies how many chunks per batch used in the random chunk scheduling>
+    lr: <floating point, learning rate>
+    dropout: <floating point, dropout>
+    att_dropout: <floating point, dropout for attention>
+    all_on_gpu: <False or True that decides if the node/edge features and node memory are completely stored on GPU>
