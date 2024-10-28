@@ -311,6 +311,7 @@ nondp/bc-w --input bcsrgraph_path --source 1
 
 ### 3. YiTu_H
 
+To run the sample programs, run the following on root/YiTu_GNN/YiTu_H directory:
 performance comparison with baseline in terms of throughput and memory consumption.
 ```bash
 # R-GCN on AIFB
@@ -344,6 +345,7 @@ throughput: 15.0x~20.0x
 
 ### 4. YiTu_T
 
+To run the sample programs, run the following on root/YiTu_GNN/YiTu_T directory:
 #### Single GPU Link Prediction
 >python train.py --data \<NameOfYourDataset> --config \<PathToConfigFile>
 
