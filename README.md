@@ -1,3 +1,6 @@
+# YiTu
+YiTu is an easy-to-use runtime designed to fully exploit hybrid parallelism across various hardware platforms (e.g., GPUs) to efficiently execute a wide range of graph algorithms, including graph neural networks (GNNs). It offers optimized support for heterogeneous and temporal graphs, enabling advanced analysis on complex, diverse, and dynamic graph structures. With heterogeneous graph capabilities, YiTu can handle graphs with multiple node and edge types, making it well-suited for applications like recommendation systems and knowledge graphs. Temporal graph support allows YiTu to process time-evolving graph data, supporting tasks in fields such as social network analysis and event forecasting.
+
 # YiTu_GNN & YiTu_GP
 
 ## Installation
@@ -242,8 +245,10 @@ tools/converter path_to_Graph.el
 tools/converter path_to_Graph.wel
 ```
 The first command converts Graph.el to the binary CSR format and generates a binary graph file with .bcsr extension under the same directory as the original file. The second command converts Graph.wel to a binary graph file with .bcsr extension and a binary edgeWeight file with .bcsrw extension.
+
 ### 3. YiTu_H
-+ download and list all the datasets
+
+YiTu_H supports a diverse range of datasets tailored for different types of graph algorithms. For general graph convolutional networks (GCN) and graph attention networks (GAT), it provides support for popular datasets such as 'cora_tiny', 'amazon', 'cora_full', and 'reddit', which are widely used in standard graph learning tasks. Additionally, for specialized models like relational GCN (RGCN) and relational GAT (RGAT) that handle heterogeneous graphs, YiTu includes support for datasets with complex relational structures, such as 'aifb_hetero', 'mutag_hetero', 'bgs_hetero', and 'am_hetero'. This comprehensive dataset compatibility enables YiTu to perform efficiently across various graph types, from homogenous to heterogeneous networks, supporting diverse applications in graph analytics.
 ```bash
 PYTHONPATH=. python3 test/bench_macro.py --info
 ```
@@ -265,7 +270,9 @@ n_edges: 148100
 avg_degrees: 0.5861625145724975
 ...
 ```
+
 ### 4. YiTu_T
+
 The four datasets are available to download from AWS S3 bucket using the `down.sh` script. The total download size is around 350GB.
 
 To use your own dataset, you need to put the following files in the folder `\DATA\\<NameOfYourDataset>\`
@@ -301,6 +308,62 @@ nondp/pr-w --input bcsrgraph_path
 nondp/sssp-w --input bcsrgraph_path --source 1
 nondp/bc-w --input bcsrgraph_path --source 1
 ```
+
+#### 3. YiTu_H
+
+To run the sample programs, run the following on root/YiTu_GNN/YiTu_H directory:
+performance comparison with baseline in terms of throughput and memory consumption.
+```bash
+# R-GCN on AIFB
+PYTHONPATH=. python3 test/bench_macro.py --lib=dgl --model=rgcn --dataset=aifb_hetero --d_hidden=32
+PYTHONPATH=. python3 test/bench_macro.py --lib=XGNN_H --model=rgcn --dataset=aifb_hetero --d_hidden=32
+
+# R-GAT on AIFB (slower)
+PYTHONPATH=. python3 test/bench_macro.py --lib=dgl --model=rgat --dataset=aifb_hetero --d_hidden=32
+PYTHONPATH=. python3 test/bench_macro.py --lib=XGNN_H --model=rgat --dataset=aifb_hetero --d_hidden=32
+```
++ Expected output:
+```bash
+[DGL] aifb-hetero, DGLRGCNModel, d_hidden=32
+allocated_bytes.all.allocated: 384.49 MB
+allocated_bytes.small_pool.allocated: 330.37 MB
+allocated_bytes.large_pool.allocated: 54.12 MB
+throughput: 1.0x
+...
+[HGL] AIFBDataset, RGCNModel, d_hidden=32
+allocated_bytes.all.allocated: 58.97 MB
+allocated_bytes.small_pool.allocated: 45.17 MB
+allocated_bytes.large_pool.allocated: 13.80 MB
+throughput: 15.0x~20.0x
+...
+```
++ Benchmark Parameters:
+  + --lib: `'dgl', 'XGNN_H', 'pyg'`
+  + --model: `'gcn', 'gat', 'rgcn', 'rgat'`
+  + --dataset: `'cora_tiny', 'amazon', 'cora_full', 'reddit'` (for `'gcn', 'gat'`), `'aifb_hetero', 'mutag_hetero', 'bgs_hetero', 'am_hetero'` (for `'rgcn', 'rgat'`)
+  + --d_hidden: `32` is the recommanded hidden size
+
+#### 4. YiTu_T
+
+To run the sample programs, run the following on root/YiTu_GNN/YiTu_T directory:
+##### Single GPU Link Prediction
+>python train.py --data \<NameOfYourDataset> --config \<PathToConfigFile>
+
+##### MultiGPU Link Prediction
+>python -m torch.distributed.launch --nproc_per_node=\<NumberOfGPUs+1> train_dist.py --data \<NameOfYourDataset> --config \<PathToConfigFile> --num_gpus \<NumberOfGPUs>
+
+##### Dynamic Node Classification
+
+Currenlty, TGL only supports performing dynamic node classification using the dynamic node embedding generated in link prediction. 
+
+For Single GPU models, directly run
+>python train_node.py --data \<NameOfYourDATA> --config \<PathToConfigFile> --model \<PathToSavedModel>
+
+For multi-GPU models, you need to first generate the dynamic node embedding
+>python -m torch.distributed.launch --nproc_per_node=\<NumberOfGPUs+1> extract_node_dist.py --data \<NameOfYourDataset> --config \<PathToConfigFile> --num_gpus \<NumberOfGPUs> --model \<PathToSavedModel>
+
+After generating the node embeding for multi-GPU models, run
+>python train_node.py --data \<NameOfYourDATA> --model \<PathToSavedModel>
 
 ### With NDP(better to use NDP on large graph)
 
@@ -344,53 +407,3 @@ python demo.py --YiTu_GNN 0 --method bc --input bcsrgraph_path --source 1
 For applications that run on unweighted graphs and weighted graphs, the input argument are both the graph file (.bcsr). For weighted graphs, the edgeWeight file (.bcsrw) should be in the same directory as the graph file (.bcsr).
 
 The source argument is an integer to indicate the source vertex, and the source vertex id is 0 By default.
-### YiTu_H
-performance comparison with baseline in terms of throughput and memory consumption.
-```bash
-# R-GCN on AIFB
-PYTHONPATH=. python3 test/bench_macro.py --lib=dgl --model=rgcn --dataset=aifb_hetero --d_hidden=32
-PYTHONPATH=. python3 test/bench_macro.py --lib=XGNN_H --model=rgcn --dataset=aifb_hetero --d_hidden=32
-
-# R-GAT on AIFB (slower)
-PYTHONPATH=. python3 test/bench_macro.py --lib=dgl --model=rgat --dataset=aifb_hetero --d_hidden=32
-PYTHONPATH=. python3 test/bench_macro.py --lib=XGNN_H --model=rgat --dataset=aifb_hetero --d_hidden=32
-```
-+ Expected output:
-```bash
-[DGL] aifb-hetero, DGLRGCNModel, d_hidden=32
-allocated_bytes.all.allocated: 384.49 MB
-allocated_bytes.small_pool.allocated: 330.37 MB
-allocated_bytes.large_pool.allocated: 54.12 MB
-throughput: 1.0x
-...
-[HGL] AIFBDataset, RGCNModel, d_hidden=32
-allocated_bytes.all.allocated: 58.97 MB
-allocated_bytes.small_pool.allocated: 45.17 MB
-allocated_bytes.large_pool.allocated: 13.80 MB
-throughput: 15.0x~20.0x
-...
-```
-+ Benchmark Parameters:
-  + --lib: `'dgl', 'XGNN_H', 'pyg'`
-  + --model: `'gcn', 'gat', 'rgcn', 'rgat'`
-  + --dataset: `'cora_tiny', 'amazon', 'cora_full', 'reddit'` (for `'gcn', 'gat'`), `'aifb_hetero', 'mutag_hetero', 'bgs_hetero', 'am_hetero'` (for `'rgcn', 'rgat'`)
-  + --d_hidden: `32` is the recommanded hidden size
-### YiTu_T
-#### Single GPU Link Prediction
->python train.py --data \<NameOfYourDataset> --config \<PathToConfigFile>
-
-#### MultiGPU Link Prediction
->python -m torch.distributed.launch --nproc_per_node=\<NumberOfGPUs+1> train_dist.py --data \<NameOfYourDataset> --config \<PathToConfigFile> --num_gpus \<NumberOfGPUs>
-
-#### Dynamic Node Classification
-
-Currenlty, TGL only supports performing dynamic node classification using the dynamic node embedding generated in link prediction. 
-
-For Single GPU models, directly run
->python train_node.py --data \<NameOfYourDATA> --config \<PathToConfigFile> --model \<PathToSavedModel>
-
-For multi-GPU models, you need to first generate the dynamic node embedding
->python -m torch.distributed.launch --nproc_per_node=\<NumberOfGPUs+1> extract_node_dist.py --data \<NameOfYourDataset> --config \<PathToConfigFile> --num_gpus \<NumberOfGPUs> --model \<PathToSavedModel>
-
-After generating the node embeding for multi-GPU models, run
->python train_node.py --data \<NameOfYourDATA> --model \<PathToSavedModel>
