@@ -407,3 +407,32 @@ python demo.py --YiTu_GNN 0 --method bc --input bcsrgraph_path --source 1
 For applications that run on unweighted graphs and weighted graphs, the input argument are both the graph file (.bcsr). For weighted graphs, the edgeWeight file (.bcsrw) should be in the same directory as the graph file (.bcsr).
 
 The source argument is an integer to indicate the source vertex, and the source vertex id is 0 By default.
+
+
+## Contact
+<div style="display:flex;flex-direction:row;flex-wrap:wrap;align-items:flex-end">
+  <div style="display: flex;flex-direction:column;justify-content:space-between;align-items:center;flex: 0 0 20%;box-sizing: border-box;padding:5px">
+    <a href="https://zjin-hust.github.io/">
+      <img src="imgs/JinZhao.jpg" alt="赵进" title="赵进">
+    </a>
+    <figcaption>赵进</figcaption>
+  </div>
+  <div style="display: flex;flex-direction:column; justify-content:space-between;align-items:center;flex: 0 0 20%;box-sizing: border-box;padding:5px">
+    <a href="https://github.com/ChopperWriteCode">
+      <img src="imgs/HuiYu.png" alt="余辉" title="余辉">
+    </a>
+      <figcaption>余辉</figcaption>
+  </div>
+  <div style="display: flex;flex-direction:column;justify-content:space-between;align-items:center;flex: 0 0 20%;box-sizing: border-box;padding:5px">
+    <a href="https://github.com/Cindy-y">
+      <img src="imgs/ChuyueYe.jpg" alt="叶楚玥" title="叶楚玥">
+    </a>
+    <figcaption>叶楚玥</figcaption>
+  </div>
+  <div style="display: flex;flex-direction:column;justify-content:space-between;align-items:center;flex: 0 0 20%;box-sizing: border-box;padding:5px">
+    <a href="https://github.com/czk23">
+      <img src="imgs/ZikangChen.jpg" alt="陈子康" title="陈子康">
+    </a>
+    <figcaption>陈子康</figcaption>
+  </div>
+</div>
