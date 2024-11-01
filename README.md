@@ -1,10 +1,12 @@
 # YiTu
 YiTu is an easy-to-use runtime designed to fully exploit hybrid parallelism across various hardware platforms (e.g., GPUs) to efficiently execute a wide range of graph algorithms, including graph neural networks (GNNs). It offers optimized support for heterogeneous and temporal graphs, enabling advanced analysis on complex, diverse, and dynamic graph structures. The temporal graph functionality is managed by the YITU_T module, which supports the analysis of time-evolving graph data, applicable in fields such as social network analysis and event forecasting. Within YiTu, the handling of heterogeneous graphs is performed by YITU_H, ensuring efficient processing of diverse graph types.
 
-## YITU_T
+## Introduction
+
+### YITU_T
 YITU_T is a specialized module within YiTu that focuses on the functionalities related to temporal graphs. It enables the processing and analysis of time-evolving graph data, allowing for the exploration of dynamic relationships and changes over time. With YITU_T, users can efficiently manage temporal aspects of graphs, supporting tasks such as event forecasting, trend analysis, and social network dynamics. This module ensures that users can effectively handle the complexities of temporal data, providing tools to analyze how graph structures evolve and interact in real-time. By integrating these capabilities, YITU_T enhances YiTu’s overall functionality, making it a powerful tool for applications requiring advanced temporal graph analysis.
 
-## YITU_H
+### YITU_H
 YITU_H is a dedicated module within YiTu that focuses on the functionalities related to heterogeneous graphs. It enables the handling of graphs with multiple types of nodes and edges, allowing for a rich representation of complex relationships. With YITU_H, users can efficiently manage diverse graph structures, making it particularly suitable for applications such as recommendation systems, knowledge graphs, and multi-relational data analysis. This module ensures seamless integration and processing of various graph elements, providing tools to explore and analyze the interactions among different types of entities. By enhancing YiTu’s capabilities in dealing with heterogeneous graphs, YITU_H empowers users to unlock deeper insights and drive advanced analyses across diverse applications.
 
 # YiTu_GNN & YiTu_GP
