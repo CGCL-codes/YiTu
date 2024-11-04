@@ -1,7 +1,23 @@
 # YiTu
-YiTu is an easy-to-use runtime designed to fully exploit hybrid parallelism across various hardware platforms (e.g., GPUs) to efficiently execute a wide range of graph algorithms, including graph neural networks (GNNs). It offers optimized support for heterogeneous and temporal graphs, enabling advanced analysis on complex, diverse, and dynamic graph structures. With heterogeneous graph capabilities, YiTu can handle graphs with multiple node and edge types, making it well-suited for applications like recommendation systems and knowledge graphs. Temporal graph support allows YiTu to process time-evolving graph data, supporting tasks in fields such as social network analysis and event forecasting.
+YiTu is an easy-to-use runtime designed to fully exploit hybrid parallelism across various hardware platforms (e.g., GPUs) to efficiently execute a wide range of graph algorithms, including graph neural networks (GNNs). It offers optimized support for heterogeneous and temporal graphs, enabling advanced analysis on complex, diverse, and dynamic graph structures. YiTu includes four modules: YITU_H, which handles heterogeneous graphs; YITU_T, focused on temporal graph analysis; YITU_GNN, dedicated to the implementation of standard Graph Neural Networks (GNNs); and YITU_GP, which offers advanced tools for graph analysis. Each module is designed to address specific aspects of graph processing and analysis, enabling efficient handling of diverse graph types and tasks.Next are the specific descriptions of each module.
 
-# YiTu_GNN & YiTu_GP
+<div align=center>
+<img src="https://github.com/czk23/YiTu/blob/main/images/system_design.png">
+</div>
+
+## Introduction
+
+### YITU_GNN
+YITU_GNN is a specialized module within YiTu that focuses on the implementation and analysis of standard Graph Neural Networks (GNNs). It allows users to efficiently build and experiment with popular GNN architectures, such as Graph Convolutional Networks (GCN) and Graph Attention Networks (GAT). With a flexible API, YITU_GNN enables easy customization of models and optimizes performance for large-scale graph training. By integrating with other modules in YiTu, it enhances the system's overall capabilities, making it a powerful tool for tasks like node classification, link prediction, and graph classification, ultimately facilitating deeper insights into graph-structured data.
+
+### YITU_GP
+YITU_GP is a dedicated module within YiTu that specializes in graph analysis functionalities. This module provides users with advanced tools and algorithms for extracting insights from graph-structured data, enabling a wide range of analytical tasks. With YITU_GP, users can perform various operations, including community detection, centrality measures, and so on. The module is designed to handle large graphs efficiently, ensuring that users can analyze complex relationships and patterns within their data. By integrating seamlessly with other modules in YiTu, YITU_GP enhances the overall analytical capabilities of the system, making it an essential component for applications requiring in-depth graph analysis and interpretation.
+
+### YITU_T
+YITU_T is a specialized module within YiTu that focuses on the functionalities related to temporal graphs. It enables the processing and analysis of time-evolving graph data, allowing for the exploration of dynamic relationships and changes over time. With YITU_T, users can efficiently manage temporal aspects of graphs, supporting tasks such as event forecasting, trend analysis, and social network dynamics. This module ensures that users can effectively handle the complexities of temporal data, providing tools to analyze how graph structures evolve and interact in real-time. By integrating these capabilities, YITU_T enhances YiTu’s overall functionality, making it a powerful tool for applications requiring advanced temporal graph analysis.
+
+### YITU_H
+YITU_H is a dedicated module within YiTu that focuses on the functionalities related to heterogeneous graphs. It enables the handling of graphs with multiple types of nodes and edges, allowing for a rich representation of complex relationships. With YITU_H, users can efficiently manage diverse graph structures, making it particularly suitable for applications such as recommendation systems, knowledge graphs, and multi-relational data analysis. This module ensures seamless integration and processing of various graph elements, providing tools to explore and analyze the interactions among different types of entities. By enhancing YiTu’s capabilities in dealing with heterogeneous graphs, YITU_H empowers users to unlock deeper insights and drive advanced analyses across diverse applications.
 
 ## Installation
 
