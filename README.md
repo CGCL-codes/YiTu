@@ -1,6 +1,8 @@
 # YiTu
 YiTu is an easy-to-use runtime designed to fully exploit hybrid parallelism across various hardware platforms (e.g., GPUs) to efficiently execute a wide range of graph algorithms, including graph neural networks (GNNs). It offers optimized support for heterogeneous and temporal graphs, enabling advanced analysis on complex, diverse, and dynamic graph structures. YiTu includes four modules: YITU_H, which handles heterogeneous graphs; YITU_T, focused on temporal graph analysis; YITU_GNN, dedicated to the implementation of standard Graph Neural Networks (GNNs); and YITU_GP, which offers advanced tools for graph analysis. Each module is designed to address specific aspects of graph processing and analysis, enabling efficient handling of diverse graph types and tasks.Next are the specific descriptions of each module.
 
+![image](https://github.com/czk23/YiTu/blob/main/images/system%20design.png)
+
 ## Introduction
 
 ### YITU_GNN
