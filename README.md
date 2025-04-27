@@ -116,7 +116,7 @@ apt-get update && apt-get install -y --no-install-recommends \
 mkdir ~/temp
 cd ~/temp
 # download the PyTorch source code that can support parameters with multiple versions
-git clone --recursive https://github.com/Ningsir/pytorch.git -b multiversion-
+git clone --recursive https://github.com/Ningsir/pytorch.git -b multi-version
 cd pytorch
 # if you are updating an existing checkout
 git submodule sync
