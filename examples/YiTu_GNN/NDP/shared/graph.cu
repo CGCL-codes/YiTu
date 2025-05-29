@@ -19,6 +19,11 @@ void GraphStructure::ReadGraph(string graphFilePath)
 	{
 		ifstream infile(graphFilePath, ios::in | ios::binary);
 
+		if (!infile) {
+			cout << "Error: Cannot open file " << graphFilePath << endl;
+			exit(-1);
+		}
+
 		infile.read((char*)&num_nodes, sizeof(uint));
 		infile.read((char*)&num_edges, sizeof(uint));
 
@@ -190,6 +195,11 @@ template <class valueType>
 void GraphStates<valueType>::ReadEdgeWeight(string weightFilePath, uint num_edgeWeight)
 {
 	ifstream infile(weightFilePath, ios::in | ios::binary);
+
+	if (!infile) {
+    cout << "Error: Cannot open file " << weightFilePath << endl;
+    exit(-1);
+}
 
 	uint num_edges = 0;
 	infile.read((char*)&num_edges, sizeof(uint));
