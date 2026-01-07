@@ -1,0 +1,2 @@
+#config_interface  -m_axi_num_read_outstanding=64
+config_interface  -m_axi_num_write_outstanding=16
